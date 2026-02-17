@@ -30,9 +30,14 @@
 - `buildings` — соответствие номер корпуса -> oid
 - `schedule_window_days_before` — сколько дней вычесть от текущей даты для начала диапазона
 - `schedule_window_months_after` — сколько месяцев добавить к текущей дате для конца диапазона
+<<<<<<< codex/implement-schedule-management-system-msv8qj
 - `schedule_range_start_param` / `schedule_range_finish_param` — имена query-параметров диапазона дат для API
 - `schedule_range_date_format` — формат даты для query-параметров (например `%Y-%m-%d`)
 - `schedule_lang_param` / `schedule_lang_value` — параметры локали запроса (например `lng=1`)
+=======
+- `schedule_range_from_param` / `schedule_range_to_param` — имена query-параметров диапазона дат для API
+- `schedule_range_date_format` — формат даты для query-параметров (например `%Y-%m-%d`)
+>>>>>>> main
 - `schedule_cache_path` — куда сохранять урезанное расписание на диске
 - `refresh_poll_seconds` — частота проверки времени обновления в фоне
 - `allowed_rooms` — аудитории, в которых разрешён поиск
@@ -47,7 +52,11 @@ python -m app.main --config config.json --mode refresh
 ```
 
 Команда выводит `Days loaded` (это количество дат, где после фильтрации остались пары), и диагностику пропусков (`not_allowed`, `out_of_range`, и т.д.).
+<<<<<<< codex/implement-schedule-management-system-msv8qj
 Клиент делает ровно один запрос на корпус с параметрами периода и локали из конфига.
+=======
+Если API плохо реагирует на формат дат из конфига, клиент автоматически пробует fallback-форматы (`%Y.%m.%d`, `%Y-%m-%d`, `%d.%m.%Y`) и берет самый полный ответ по диапазону.
+>>>>>>> main
 
 Подбор аудиторий:
 

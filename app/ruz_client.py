@@ -55,6 +55,7 @@ class RuzScheduleClient:
         )
 
         for building_number, building_oid in self._config.buildings.items():
+<<<<<<< codex/implement-schedule-management-system-msv8qj
             url = _attach_range_query(
                 base_url=self._config.base_url.format(building_oid=building_oid),
                 range_start=range_start,
@@ -66,11 +67,31 @@ class RuzScheduleClient:
                 date_format=self._config.schedule_range_date_format,
             )
             lessons = _load_json(url)
+=======
+            base_url = self._config.base_url.format(building_oid=building_oid)
+            lessons = _load_lessons_with_fallback_formats(
+                base_url=base_url,
+                range_start=range_start,
+                range_end=range_end,
+                from_param=self._config.schedule_range_from_param,
+                to_param=self._config.schedule_range_to_param,
+                preferred_format=self._config.schedule_range_date_format,
+            )
+>>>>>>> main
             allowed_rooms = set(self._config.allowed_rooms.get(building_number, []))
 
             for lesson in lessons:
                 counter["total_lessons"] += 1
+<<<<<<< codex/implement-schedule-management-system-msv8qj
                 room = str(lesson.get("auditorium") or lesson.get("room") or lesson.get("auditoriumName") or "").strip()
+=======
+                room = str(
+                    lesson.get("auditorium")
+                    or lesson.get("room")
+                    or lesson.get("auditoriumName")
+                    or ""
+                ).strip()
+>>>>>>> main
                 if not room:
                     counter["skipped_no_room"] += 1
                     continue
@@ -109,6 +130,76 @@ class RuzScheduleClient:
         return FetchResult(occupied=occupied, stats=FetchStats(**counter))
 
 
+<<<<<<< codex/implement-schedule-management-system-msv8qj
+=======
+def _load_lessons_with_fallback_formats(
+    base_url: str,
+    range_start: date,
+    range_end: date,
+    from_param: str,
+    to_param: str,
+    preferred_format: str,
+) -> list[dict]:
+    candidate_formats = _candidate_date_formats(preferred_format)
+    best_lessons: list[dict] = []
+    best_score = -1
+
+    for date_format in candidate_formats:
+        url = _attach_range_query(
+            base_url=base_url,
+            range_start=range_start,
+            range_end=range_end,
+            from_param=from_param,
+            to_param=to_param,
+            date_format=date_format,
+        )
+        try:
+            lessons = _load_json(url)
+        except Exception:
+            continue
+
+        score = _range_coverage_score(lessons, range_end)
+        if score > best_score:
+            best_score = score
+            best_lessons = lessons
+
+    return best_lessons
+
+
+def _candidate_date_formats(preferred_format: str) -> list[str]:
+    candidates = [preferred_format, "%Y.%m.%d", "%Y-%m-%d", "%d.%m.%Y"]
+    result: list[str] = []
+    for item in candidates:
+        if item not in result:
+            result.append(item)
+    return result
+
+
+def _range_coverage_score(lessons: list[dict], target_end: date) -> int:
+    latest_day: date | None = None
+    parsed_count = 0
+
+    for lesson in lessons:
+        date_token = lesson.get("date") or lesson.get("day") or lesson.get("lessonDate")
+        if not date_token:
+            continue
+        try:
+            lesson_day = _parse_date(date_token)
+        except ValueError:
+            continue
+        parsed_count += 1
+        if latest_day is None or lesson_day > latest_day:
+            latest_day = lesson_day
+
+    if latest_day is None:
+        return 0
+
+    # Favor responses that reach the requested end date; fallback to parsed count.
+    distance_penalty = abs((target_end - latest_day).days)
+    return max(0, 10_000 - distance_penalty * 100) + parsed_count
+
+
+>>>>>>> main
 def _load_json(url: str):
     request = Request(url, headers={"User-Agent": "extract-rooms-v2/1.0"})
     with urlopen(request, timeout=30) as response:
@@ -170,6 +261,7 @@ def _attach_range_query(
     base_url: str,
     range_start: date,
     range_end: date,
+<<<<<<< codex/implement-schedule-management-system-msv8qj
     start_param: str,
     finish_param: str,
     lang_param: str,
@@ -180,6 +272,15 @@ def _attach_range_query(
         start_param: range_start.strftime(date_format),
         finish_param: range_end.strftime(date_format),
         lang_param: lang_value,
+=======
+    from_param: str,
+    to_param: str,
+    date_format: str,
+) -> str:
+    params = {
+        from_param: range_start.strftime(date_format),
+        to_param: range_end.strftime(date_format),
+>>>>>>> main
     }
     delimiter = "&" if "?" in base_url else "?"
     return f"{base_url}{delimiter}{urlencode(params)}"
