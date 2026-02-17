@@ -30,7 +30,16 @@ def run() -> None:
 
     if args.mode == "refresh":
         occupied = service.refresh_schedule_cache()
+        stats = service.last_fetch_stats
         print(f"Cache updated: {config.schedule_cache_path}. Days loaded: {len(occupied)}")
+        if stats:
+            print(
+                "Fetch stats: "
+                f"total={stats.total_lessons}, accepted={stats.accepted_lessons}, "
+                f"no_room={stats.skipped_no_room}, not_allowed={stats.skipped_not_allowed_room}, "
+                f"missing_date_time={stats.skipped_no_time_or_date}, bad_date_time={stats.skipped_bad_date_or_time}, "
+                f"out_of_range={stats.skipped_out_of_range}"
+            )
         return
 
     if args.mode == "bot":

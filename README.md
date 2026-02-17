@@ -45,6 +45,8 @@
 python -m app.main --config config.json --mode refresh
 ```
 
+Команда выводит `Days loaded` (это количество дат, где после фильтрации остались пары), и диагностику пропусков (`not_allowed`, `out_of_range`, и т.д.).
+
 Подбор аудиторий:
 
 ```bash

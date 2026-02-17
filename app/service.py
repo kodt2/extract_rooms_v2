@@ -9,7 +9,7 @@ from app.allocator import RoomAllocator
 from app.config import AppConfig
 from app.models import AllocationResult, Request, TimeRange
 from app.pdf_mode import PdfPayloadBuilder
-from app.ruz_client import RuzScheduleClient
+from app.ruz_client import FetchStats, RuzScheduleClient
 from app.schedule_cache import ScheduleCacheRepository
 
 MSK_TZ = ZoneInfo("Europe/Moscow")
@@ -25,6 +25,7 @@ class RoomService:
         self._allocator = RoomAllocator(config)
         self._report_builder = PdfPayloadBuilder(config)
         self._cache = ScheduleCacheRepository(Path(config.schedule_cache_path))
+        self._last_fetch_stats: FetchStats | None = None
 
     def ensure_schedule_cache(self) -> dict[str, dict[str, list[TimeRange]]]:
         if self._cache.exists():
@@ -32,9 +33,14 @@ class RoomService:
         return self.refresh_schedule_cache()
 
     def refresh_schedule_cache(self) -> dict[str, dict[str, list[TimeRange]]]:
-        occupied = self._client.fetch_occupied_slots()
-        self._cache.save(occupied)
-        return occupied
+        result = self._client.fetch_occupied_slots_with_stats()
+        self._last_fetch_stats = result.stats
+        self._cache.save(result.occupied)
+        return result.occupied
+
+    @property
+    def last_fetch_stats(self) -> FetchStats | None:
+        return self._last_fetch_stats
 
     def allocate(self, requests: list[Request]) -> list[AllocationResult]:
         occupied = self.ensure_schedule_cache()

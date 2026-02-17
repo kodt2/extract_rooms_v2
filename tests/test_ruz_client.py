@@ -1,6 +1,6 @@
 from datetime import date
 
-from app.ruz_client import _add_months, _attach_range_query, _build_schedule_window, _parse_date
+from app.ruz_client import _add_months, _attach_range_query, _build_schedule_window, _normalize_time, _parse_date
 
 
 def test_build_schedule_window_from_config_values() -> None:
@@ -29,3 +29,11 @@ def test_parse_date_supports_multiple_formats() -> None:
     assert _parse_date("2026-03-12").isoformat() == "2026-03-12"
     assert _parse_date("12.03.2026").isoformat() == "2026-03-12"
     assert _parse_date("2026-03-12T08:30:00").isoformat() == "2026-03-12"
+
+
+def test_parse_date_supports_dotnet_date_nest() -> None:
+    assert _parse_date("/Date(1770843600000+0300)/").isoformat() == "2026-02-12"
+
+
+def test_normalize_time_supports_seconds() -> None:
+    assert _normalize_time("07:30:00").strftime("%H:%M") == "07:30"
