@@ -20,9 +20,17 @@ class AppConfig:
     contact_fields: dict[str, str]
     schedule_window_days_before: int
     schedule_window_months_after: int
+<<<<<<< codex/implement-schedule-management-system-msv8qj
+    schedule_range_start_param: str
+    schedule_range_finish_param: str
+    schedule_range_date_format: str
+    schedule_lang_param: str
+    schedule_lang_value: int
+=======
     schedule_range_from_param: str
     schedule_range_to_param: str
     schedule_range_date_format: str
+>>>>>>> main
     schedule_cache_path: str
     refresh_poll_seconds: int
 
@@ -36,9 +44,17 @@ class AppConfig:
             contact_fields={str(k): str(v) for k, v in data.get("contact_fields", {}).items()},
             schedule_window_days_before=int(data.get("schedule_window_days_before", 1)),
             schedule_window_months_after=int(data.get("schedule_window_months_after", 1)),
+<<<<<<< codex/implement-schedule-management-system-msv8qj
+            schedule_range_start_param=str(data.get("schedule_range_start_param", data.get("schedule_range_from_param", "start"))),
+            schedule_range_finish_param=str(data.get("schedule_range_finish_param", data.get("schedule_range_to_param", "finish"))),
+            schedule_range_date_format=str(data.get("schedule_range_date_format", "%Y-%m-%d")),
+            schedule_lang_param=str(data.get("schedule_lang_param", "lng")),
+            schedule_lang_value=int(data.get("schedule_lang_value", 1)),
+=======
             schedule_range_from_param=str(data.get("schedule_range_from_param", "dateFrom")),
             schedule_range_to_param=str(data.get("schedule_range_to_param", "dateTo")),
             schedule_range_date_format=str(data.get("schedule_range_date_format", "%Y-%m-%d")),
+>>>>>>> main
             schedule_cache_path=str(data.get("schedule_cache_path", "data/clean_schedule.json")),
             refresh_poll_seconds=int(data.get("refresh_poll_seconds", 30)),
         )
