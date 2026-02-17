@@ -1,6 +1,14 @@
 from datetime import date
 
-from app.ruz_client import _add_months, _attach_range_query, _build_schedule_window, _normalize_time, _parse_date
+from app.ruz_client import (
+    _add_months,
+    _attach_range_query,
+    _build_schedule_window,
+    _candidate_date_formats,
+    _normalize_time,
+    _parse_date,
+    _range_coverage_score,
+)
 
 
 def test_build_schedule_window_from_config_values() -> None:
@@ -37,3 +45,17 @@ def test_parse_date_supports_dotnet_date_nest() -> None:
 
 def test_normalize_time_supports_seconds() -> None:
     assert _normalize_time("07:30:00").strftime("%H:%M") == "07:30"
+
+
+def test_candidate_date_formats_contains_fallbacks_without_duplicates() -> None:
+    result = _candidate_date_formats("%Y-%m-%d")
+    assert result[0] == "%Y-%m-%d"
+    assert len(result) == len(set(result))
+    assert "%Y.%m.%d" in result
+
+
+def test_range_coverage_score_prefers_further_end_date() -> None:
+    target_end = date(2026, 3, 19)
+    short = [{"date": "2026-02-22"}, {"date": "2026-02-21"}]
+    long = [{"date": "2026-03-19"}, {"date": "2026-03-18"}]
+    assert _range_coverage_score(long, target_end) > _range_coverage_score(short, target_end)
