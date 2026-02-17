@@ -17,6 +17,8 @@ def _config() -> AppConfig:
         schedule_range_from_param="dateFrom",
         schedule_range_to_param="dateTo",
         schedule_range_date_format="%Y-%m-%d",
+        schedule_cache_path="data/test_cache.json",
+        refresh_poll_seconds=30,
     )
 
 

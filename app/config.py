@@ -23,6 +23,8 @@ class AppConfig:
     schedule_range_from_param: str
     schedule_range_to_param: str
     schedule_range_date_format: str
+    schedule_cache_path: str
+    refresh_poll_seconds: int
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> "AppConfig":
@@ -37,6 +39,8 @@ class AppConfig:
             schedule_range_from_param=str(data.get("schedule_range_from_param", "dateFrom")),
             schedule_range_to_param=str(data.get("schedule_range_to_param", "dateTo")),
             schedule_range_date_format=str(data.get("schedule_range_date_format", "%Y-%m-%d")),
+            schedule_cache_path=str(data.get("schedule_cache_path", "data/clean_schedule.json")),
+            refresh_poll_seconds=int(data.get("refresh_poll_seconds", 30)),
         )
 
 
