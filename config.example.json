@@ -1,0 +1,24 @@
+{
+  "base_url": "https://portal.unn.ru/ruzapi/schedule/building/{building_oid}",
+  "buildings": {
+    "2": 145,
+    "6": 147
+  },
+  "schedule_window_days_before": 1,
+  "schedule_window_months_after": 1,
+  "schedule_range_from_param": "dateFrom",
+  "schedule_range_to_param": "dateTo",
+  "schedule_range_date_format": "%Y-%m-%d",
+  "allowed_rooms": {
+    "2": ["212", "305", "402"],
+    "6": ["610", "615", "620"]
+  },
+  "big_rooms": {
+    "2": ["305", "402"],
+    "6": ["620"]
+  },
+  "contact_fields": {
+    "phone": "+7-900-000-00-00",
+    "manager": "Иван Петров"
+  }
+}
