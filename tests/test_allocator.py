@@ -14,17 +14,9 @@ def _config() -> AppConfig:
         contact_fields={},
         schedule_window_days_before=1,
         schedule_window_months_after=1,
-<<<<<<< codex/implement-schedule-management-system-msv8qj
-        schedule_range_start_param="start",
-        schedule_range_finish_param="finish",
-        schedule_range_date_format="%Y-%m-%d",
-        schedule_lang_param="lng",
-        schedule_lang_value=1,
-=======
         schedule_range_from_param="dateFrom",
         schedule_range_to_param="dateTo",
         schedule_range_date_format="%Y-%m-%d",
->>>>>>> main
         schedule_cache_path="data/test_cache.json",
         refresh_poll_seconds=30,
     )

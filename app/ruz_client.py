@@ -55,19 +55,6 @@ class RuzScheduleClient:
         )
 
         for building_number, building_oid in self._config.buildings.items():
-<<<<<<< codex/implement-schedule-management-system-msv8qj
-            url = _attach_range_query(
-                base_url=self._config.base_url.format(building_oid=building_oid),
-                range_start=range_start,
-                range_end=range_end,
-                start_param=self._config.schedule_range_start_param,
-                finish_param=self._config.schedule_range_finish_param,
-                lang_param=self._config.schedule_lang_param,
-                lang_value=self._config.schedule_lang_value,
-                date_format=self._config.schedule_range_date_format,
-            )
-            lessons = _load_json(url)
-=======
             base_url = self._config.base_url.format(building_oid=building_oid)
             lessons = _load_lessons_with_fallback_formats(
                 base_url=base_url,
@@ -77,21 +64,16 @@ class RuzScheduleClient:
                 to_param=self._config.schedule_range_to_param,
                 preferred_format=self._config.schedule_range_date_format,
             )
->>>>>>> main
             allowed_rooms = set(self._config.allowed_rooms.get(building_number, []))
 
             for lesson in lessons:
                 counter["total_lessons"] += 1
-<<<<<<< codex/implement-schedule-management-system-msv8qj
-                room = str(lesson.get("auditorium") or lesson.get("room") or lesson.get("auditoriumName") or "").strip()
-=======
                 room = str(
                     lesson.get("auditorium")
                     or lesson.get("room")
                     or lesson.get("auditoriumName")
                     or ""
                 ).strip()
->>>>>>> main
                 if not room:
                     counter["skipped_no_room"] += 1
                     continue
@@ -130,8 +112,6 @@ class RuzScheduleClient:
         return FetchResult(occupied=occupied, stats=FetchStats(**counter))
 
 
-<<<<<<< codex/implement-schedule-management-system-msv8qj
-=======
 def _load_lessons_with_fallback_formats(
     base_url: str,
     range_start: date,
@@ -199,7 +179,6 @@ def _range_coverage_score(lessons: list[dict], target_end: date) -> int:
     return max(0, 10_000 - distance_penalty * 100) + parsed_count
 
 
->>>>>>> main
 def _load_json(url: str):
     request = Request(url, headers={"User-Agent": "extract-rooms-v2/1.0"})
     with urlopen(request, timeout=30) as response:
@@ -261,18 +240,6 @@ def _attach_range_query(
     base_url: str,
     range_start: date,
     range_end: date,
-<<<<<<< codex/implement-schedule-management-system-msv8qj
-    start_param: str,
-    finish_param: str,
-    lang_param: str,
-    lang_value: int,
-    date_format: str,
-) -> str:
-    params = {
-        start_param: range_start.strftime(date_format),
-        finish_param: range_end.strftime(date_format),
-        lang_param: lang_value,
-=======
     from_param: str,
     to_param: str,
     date_format: str,
@@ -280,7 +247,6 @@ def _attach_range_query(
     params = {
         from_param: range_start.strftime(date_format),
         to_param: range_end.strftime(date_format),
->>>>>>> main
     }
     delimiter = "&" if "?" in base_url else "?"
     return f"{base_url}{delimiter}{urlencode(params)}"
