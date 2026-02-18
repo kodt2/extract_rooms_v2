@@ -47,3 +47,23 @@ python -m app.main --config config.json --input requests.txt --mode pdf --output
 
 ## Обновление расписания
 В `app.service.should_refresh` реализована проверка временных точек обновления (04:00 и 16:00 по Москве). Её можно использовать во внешнем планировщике (cron/systemd timer).
+
+
+## Новый режим: генерация конечного PDF по шаблону
+
+Поддерживается режим `render-pdf`, который полностью управляется шаблонным JSON-конфигом и входными данными JSON.
+
+Возможности:
+- выравнивание текста: `left`, `center`, `right`;
+- отступы: `margin_left`, `margin_right`, `bottom`/`top`;
+- печать массивов (`array_text`) по строкам;
+- подстановка переменных `{{path.to.value}}`;
+- генерация нескольких страниц через `repeat_for`.
+
+Пример запуска:
+
+```bash
+python -m app.main --mode render-pdf --template my_template.json --data my_data.json --output output/report.pdf
+```
+
+Подробная инструкция по созданию кастомных шаблонов: `PDF_TEMPLATE_GUIDE.md`.
